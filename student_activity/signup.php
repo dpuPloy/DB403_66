@@ -1,5 +1,15 @@
 <?php
     require 'connect.php';
+    if (isset($_POST['submit'])) {
+      $studentID = $_POST['studentID'];
+      $studentName = $_POST['studentName'];
+      $majorID = $_POST['majorID'];
+      $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+      $sql ="insert into student(studentID,studentName,majorID,password) 
+      values('{$studentID}','{$studentName}','{$majorID}','{$password}')"; 
+      echo $sql;
+      $conn->query($sql);
+    }
 ?>
 <!doctype html>
 <html lang="en">
@@ -24,23 +34,33 @@
       }
 
     </style>
+    <script>
+      function validate() {
+        let p1 = document.querySelector('#password').value;
+        let p2 = document.querySelector('#re-password').value;
+        if (p1 != p2) {
+          alert('Passwords are not identical.');
+          event.preventDefault();
+        }
+      }
+    </script>
   </head>
   <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <main class="form-signup w-100 m-auto">
-      <form>
+      <form action="signup.php" method="post" onsubmit="validate()">
         <img class="mb-4" src="images/porsche-logo.png" alt="" height="100">
         <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
     
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" id="student-id" placeholder=" ">
+          <input required name="studentID" type="text" class="form-control" id="student-id" placeholder=" ">
           <label for="student-id">Student ID</label>
         </div>
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" id="student-name" placeholder=" ">
+          <input required name="studentName" type="text" class="form-control" id="student-name" placeholder=" ">
           <label for="student-name">Student Name</label>
         </div>
         <div class="form-floating mb-2">
-          <select class="form-control" id="major">
+          <select name="majorID" class="form-control" id="major">
 <?php
 $sql ='select * from  major order by faculty';
 $result = $conn->query($sql);
@@ -55,7 +75,7 @@ $conn->close();
           <label for="major">Major</label>
         </div>
         <div class="form-floating mb-2">
-          <input type="password" class="form-control" id="password" placeholder=" ">
+          <input required name="password" type="password" class="form-control" id="password" placeholder=" ">
           <label for="password">Password</label>
         </div>
         <div class="form-floating mb-2">
@@ -63,7 +83,7 @@ $conn->close();
           <label for="re-password">Retype-Password</label>
         </div>
     
-        <button class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
+        <button name="submit" class="btn btn-primary w-100 py-2" type="submit">Sign up</button>
         <p class="mt-5 mb-3 text-body-secondary">© 2017–2023</p>
       </form>
     </main>
