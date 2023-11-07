@@ -9,11 +9,12 @@
         $result = $conn->query($sql);
         $row = $result->fetch_assoc();
         if($row) {
+          
           if(password_verify($password, $row['password'])) {
             $_SESSION['user'] = [
               'studentID'=>$row['studentID'],
               'studentName'=>$row['studentName']
-        ];
+            ];
             header('location:index.php');
             exit;
           }
